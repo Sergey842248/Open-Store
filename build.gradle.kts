@@ -26,11 +26,11 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.machiav3lli.fdroid"
+        applicationId = "com.fuure.openstore"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1107
-        versionName = "1.1.2"
+        versionCode = 200
+        versionName = "2.0.0"
         buildConfigField("String", "KEY_API_EXODUS", "\"81f30e4903bde25023857719e71c94829a41e6a5\"")
         buildConfigField("String[]", "DETECTED_LOCALES", langsListString)
     }
