@@ -40,4 +40,10 @@ class DownloadedRepository(
             )
         }
     }
+
+    suspend fun deleteAll(packageName: String) {
+        withContext(jcc) {
+            downloadedDao.deleteAll(packageName)
+        }
+    }
 }

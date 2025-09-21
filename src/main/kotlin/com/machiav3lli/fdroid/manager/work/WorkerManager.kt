@@ -77,6 +77,7 @@ class WorkerManager(appContext: Context) : KoinComponent {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     val downloadsScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val downloadTracker = DownloadsTracker()
+    private val canceledDownloads = mutableSetOf<String>()
     private val downloadStateHandler by lazy {
         DownloadStateHandler(
             context = langContext,
@@ -265,12 +266,15 @@ class WorkerManager(appContext: Context) : KoinComponent {
     }
 
     fun cancelDownload(packageName: String?) {
+        if (packageName == null) return
+        synchronized(canceledDownloads) {
+            canceledDownloads.add(packageName)
+        }
         DownloadWorker::class.qualifiedName?.let {
-            workManager.cancelAllWorkByTag(
-                if (packageName != null) "download_$packageName"
-                else it
-            )
-            // TODO upsert Error to DB.Downloaded
+            workManager.cancelAllWorkByTag("download_$packageName")
+            scope.launch {
+                downloadedRepo.deleteAll(packageName)
+            }
         }
     }
 
@@ -369,6 +373,14 @@ class WorkerManager(appContext: Context) : KoinComponent {
 
                 if (downloadTracker.trackWork(workInfo, data)) runCatching {
                     val task = DownloadWorker.Companion.getTask(data)
+                    synchronized(canceledDownloads) {
+                        if (task.packageName in canceledDownloads) {
+                            if (workInfo.state == WorkInfo.State.CANCELLED) {
+                                canceledDownloads.remove(task.packageName)
+                            }
+                            return@runCatching
+                        }
+                    }
                     val resultCode = data.getInt(ARG_RESULT_CODE, 0)
                     val validationError = ValidationError.entries[
                         data.getInt(ARG_VALIDATION_ERROR, 0)
