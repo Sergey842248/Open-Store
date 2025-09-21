@@ -66,18 +66,18 @@ android {
             isMinifyEnabled = false
             isShrinkResources = false
             applicationIdSuffix = ".debug"
-            resValue("string", "application_name", "Neo Store - Debug")
+            resValue("string", "application_name", "Open-Store - Debug")
         }
         register("neo") {
             isMinifyEnabled = false
             isShrinkResources = false
             applicationIdSuffix = ".neo"
-            resValue("string", "application_name", "Neo Store - Neo")
+            resValue("string", "application_name", "Open-Store - Neo")
         }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            resValue("string", "application_name", "Neo Store")
+            resValue("string", "application_name", "Open-Store")
         }
         all {
             isCrunchPngs = false
