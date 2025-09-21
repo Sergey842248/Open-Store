@@ -107,7 +107,7 @@ class BatchSyncWorker(
     }
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
-        val notification = createForegroundNotification()
+        val notification = createForegroundNotification(completedRepositories, totalRepositories)
 
         return ForegroundInfo(
             NOTIFICATION_ID_BATCH_SYNCING,
@@ -117,7 +117,7 @@ class BatchSyncWorker(
         )
     }
 
-    private fun createForegroundNotification(): Notification {
+    private fun createForegroundNotification(completed: Int, total: Int): Notification {
         val contentPendingIntent = PendingIntent.getActivity(
             context, 0,
             Intent(context, NeoActivity::class.java),
@@ -146,20 +146,20 @@ class BatchSyncWorker(
                 )
             )
             .setSmallIcon(R.drawable.ic_sync)
-            .setOngoing(completedRepositories < totalRepositories)
+            .setOngoing(completed < total)
             .setSilent(true)
             .setContentIntent(contentPendingIntent)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_PROGRESS)
-            .setProgress(totalRepositories, completedRepositories, false)
+            .setProgress(total, completed, false)
             .addAction(
                 R.drawable.ic_cancel,
                 context.getString(R.string.cancel_all),
                 cancelAllPendingIntent
             )
             .apply {
-                if (completedRepositories >= totalRepositories)
+                if (completed >= total)
                     setTimeoutAfter(InstallerReceiver.INSTALLED_NOTIFICATION_TIMEOUT)
             }
             .build()

@@ -127,12 +127,17 @@ class SyncNotificationManager(
             .setContentIntent(contentPendingIntent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setCategory(NotificationCompat.CATEGORY_PROGRESS)
-            .setTimeoutAfter(SYNC_NOTIFICATION_TIMEOUT)
             .addAction(
                 R.drawable.ic_cancel,
                 langContext.getString(R.string.cancel_all),
                 cancelAllPendingIntent
             )
+        val totalProgress = activeSyncsList.sumOf { it.progress?.percentage ?: 0 }
+        val averageProgress = if (totalSyncs > 0) totalProgress / totalSyncs else 0
+
+        if (totalSyncs > 0) {
+            builder.setProgress(100, averageProgress, false)
+        }
 
         // Use InboxStyle to show multiple repositories
         val inboxStyle = NotificationCompat.InboxStyle()
@@ -195,7 +200,6 @@ class SyncNotificationManager(
 
     companion object {
         private const val TAG = "SyncNotificationManager"
-        private const val SYNC_NOTIFICATION_TIMEOUT: Long = 5000
         private const val SYNC_MAX_LINES: Int = 5
     }
 }
