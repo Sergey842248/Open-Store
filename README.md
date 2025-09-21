@@ -58,5 +58,3 @@ To [Donno](https://github.com/Donnnno) for the new app icon base.
 
 Licensed under the [GPLv3+](/COPYING). \
 Direct adaptation/modification of [Neo-Store](https://github.com/NeoApplications/Neo-Store)
-
-Copyright © 2025 [Antonios Hazim](https://github.com/machiav3lli) and [contributors](https://github.com/NeoApplications/Neo-Store/graphs/contributo
