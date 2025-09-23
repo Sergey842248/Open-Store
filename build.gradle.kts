@@ -29,8 +29,8 @@ android {
         applicationId = "com.future.openstore"
         minSdk = 24
         targetSdk = 36
-        versionCode = 200
-        versionName = "2.0.0"
+        versionCode = 201
+        versionName = "2.0.1"
         buildConfigField("String", "KEY_API_EXODUS", "\"81f30e4903bde25023857719e71c94829a41e6a5\"")
         buildConfigField("String[]", "DETECTED_LOCALES", langsListString)
     }
