@@ -26,7 +26,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.fuure.openstore"
+        applicationId = "com.future.openstore"
         minSdk = 24
         targetSdk = 36
         versionCode = 200
